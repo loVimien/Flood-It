@@ -8,7 +8,7 @@ Projet Prep'ISIMA 2 proposé par L. Yon.
 
 ## Informations
 
-Nous allons programmer en Python 3.
+Nous allons programmer en Python 3 en utilisant la bibliothèque graphique Tkinter.
 
 ## À faire
 
