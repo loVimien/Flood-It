@@ -14,7 +14,3 @@ Nous allons programmer en Python 3 en utilisant la bibliothèque graphique Tkint
 
 - [ ] Programmer une interface graphique pour le jeu *Flood-It*
 - [ ] Créer des heuristiques de résolution du jeu
-
-## Questions
-
-- Faut il faire une documentation ?
