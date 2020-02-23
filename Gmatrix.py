@@ -9,8 +9,7 @@ class Matrix:
             for j in range(len(square_list[i])):
                 line.append(square_list[i][j].indCurrentColor)
             self.mat.append(line)
-        self.currSet = []
-        self.currSet.append([self.mat[0][0], 0, 0])
+        self.currSet = [[self.mat[0][0], 0, 0]]
         self.updateMatrix(self.mat[0][0])
     def updateMatrix(self, colorToUpdate):
         i = 0
@@ -34,7 +33,7 @@ class Matrix:
         for k in range(len(self.currSet)):
             currI = self.currSet[k][1]
             currJ = self.currSet[k][2]
-            self.graphicMat[currI][currJ].setColor(self.currSet[k][0])
+            self.graphicMat[currI][currJ].indCurrentColor = self.currSet[k][0]
 
 class GMatrix:
     def __init__(self, master, nbLines, nbCols, sqDim):
@@ -46,4 +45,7 @@ class GMatrix:
             for j in range(nbCols):
                 line.append(Square(master, sqDim, i, j, self))
             self.gMat.append(line)
-        self.mat = Matrix(self.gMat)
+        self._mat = Matrix(self.gMat)
+    def _get_Mat(self):
+        return self._mat
+    mat = property(_get_Mat)
