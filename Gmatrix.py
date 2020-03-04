@@ -5,13 +5,14 @@ class Matrix:
     def __init__(self, square_list):
         self.graphicMat = square_list
         self.mat = []
+        self.moves = 0 # Nombre de coups joués
         for i in range(len(square_list)):
             line = []
             for j in range(len(square_list[i])):
                 line.append(square_list[i][j].indCurrentColor)
             self.mat.append(line)
 
-		# couleur = currSet[abscisse][ordonnée]est la liste des carrés de même couleur voisins
+        # couleur = currSet[abscisse][ordonnée]est la liste des carrés de même couleur voisins
         self.currSet = [[self.mat[0][0], 0, 0]]
         self.updateMatrix(self.mat[0][0])
 
@@ -22,7 +23,7 @@ class Matrix:
             currJ = self.currSet[i][2]
             currCol = self.currSet[i][0]
 
-			# On ajoute à la liste des carrés à changer de couleur les carrés voisins de même couleur et non présents dans la liste
+            # On ajoute à la liste des carrés à changer de couleur les carrés voisins de même couleur et non présents dans la liste
             if currI + 1 < len(self.mat) and self.mat[currI + 1][currJ] == colorToUpdate and not([currCol, currI + 1, currJ] in self.currSet):
                 self.currSet.append([currCol, currI + 1, currJ])
             if currI - 1 >= 0 and self.mat[currI - 1][currJ] == colorToUpdate and not([currCol, currI - 1, currJ] in self.currSet):
@@ -33,7 +34,12 @@ class Matrix:
                 self.currSet.append([currCol, currI, currJ - 1])
             i += 1
 
-		# On applique le changmeent de couleur aux carrés présents dans la liste currSet
+        # Si le nombre de carré de la nouvelle couleur est égal au nombre total alors toute la grille est remplie
+        if len(self.currSet) == len(self.mat) * len(self.mat[0]):
+            self.win()
+
+        # On applique le changement de couleur aux carrés présents dans la liste currSet
+        self.moves += 1
         for i in range(len(self.currSet)):
             self.currSet[i][0] = colorToUpdate
         self.updateGraphicMatrix()
@@ -43,6 +49,11 @@ class Matrix:
             currI = self.currSet[k][1]
             currJ = self.currSet[k][2]
             self.graphicMat[currI][currJ].indCurrentColor = self.currSet[k][0]
+
+    def win(self):
+        # Le Flood It est rempli d'une seule couleur
+        print("Vous avez gagné en", self.moves, "coups !") # Ajouter le nombre de coups
+        # Fermer la fenêtre
 
 
 class GMatrix:
