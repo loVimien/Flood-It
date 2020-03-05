@@ -2,10 +2,11 @@ from square import Square
 
 
 class Matrix:
-    def __init__(self, square_list):
+    def __init__(self, square_list, window):
         self.graphicMat = square_list
         self.mat = []
         self.moves = 0 # Nombre de coups joués
+        self.window = window
         for i in range(len(square_list)):
             line = []
             for j in range(len(square_list[i])):
@@ -36,7 +37,7 @@ class Matrix:
 
         # Si le nombre de carré de la nouvelle couleur est égal au nombre total alors toute la grille est remplie
         if len(self.currSet) == len(self.mat) * len(self.mat[0]):
-            self.win()
+            self.win(self.window)
 
         # On applique le changement de couleur aux carrés présents dans la liste currSet
         self.moves += 1
@@ -50,10 +51,11 @@ class Matrix:
             currJ = self.currSet[k][2]
             self.graphicMat[currI][currJ].indCurrentColor = self.currSet[k][0]
 
-    def win(self):
+    def win(self, window):
         # Le Flood It est rempli d'une seule couleur
         print("Vous avez gagné en", self.moves, "coups !") # Ajouter le nombre de coups
-        # Fermer la fenêtre
+        window.quit() # Fermer la fenêtre
+        # window.destroy()
 
 
 class GMatrix:
@@ -66,7 +68,7 @@ class GMatrix:
             for j in range(nbCols):
                 line.append(Square(master, sqDim, i, j, self))
             self.gMat.append(line)
-        self._mat = Matrix(self.gMat)
+        self._mat = Matrix(self.gMat, master)
 
     def _get_Mat(self):
         return self._mat
