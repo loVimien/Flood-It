@@ -5,7 +5,7 @@ class Matrix:
     def __init__(self, square_list, window):
         self.graphicMat = square_list
         self.mat = []
-        self.moves = 0 # Nombre de coups joués
+        self.moves = -1 # Nombre de coups joués
         self.window = window
         for i in range(len(square_list)):
             line = []
@@ -35,9 +35,6 @@ class Matrix:
                 self.currSet.append([currCol, currI, currJ - 1])
             i += 1
 
-        # Si le nombre de carré de la nouvelle couleur est égal au nombre total alors toute la grille est remplie
-        if len(self.currSet) == len(self.mat) * len(self.mat[0]):
-            self.win(self.window)
 
         # On applique le changement de couleur aux carrés présents dans la liste currSet
         self.moves += 1
@@ -45,17 +42,22 @@ class Matrix:
             self.currSet[i][0] = colorToUpdate
         self.updateGraphicMatrix()
 
+        self.win() # Quitte si on a gagné sinon renvoie faux
+
     def updateGraphicMatrix(self):
         for k in range(len(self.currSet)):
             currI = self.currSet[k][1]
             currJ = self.currSet[k][2]
             self.graphicMat[currI][currJ].indCurrentColor = self.currSet[k][0]
 
-    def win(self, window):
+    def win(self):
+        if len(self.currSet) == len(self.mat) * len(self.mat[0]):
+        # Si le nombre de carré de la nouvelle couleur est égal au nombre total alors toute la grille est remplie
         # Le Flood It est rempli d'une seule couleur
-        print("Vous avez gagné en", self.moves, "coups !") # Ajouter le nombre de coups
-        window.quit() # Fermer la fenêtre
-        # window.destroy()
+            print("Vous avez gagné en", self.moves, "coups !") # Ajouter le nombre de coups
+            self.window.quit() # Fermer la fenêtre
+            # window.destroy()
+        return False
 
 
 class GMatrix:
