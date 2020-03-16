@@ -24,9 +24,11 @@ class GMatrix:
         self._labelMoves.grid(row = 0, column = 0, columnspan=5)
         self._textWin = None
 
+        self.updateSet(self[(0, 0)])
+
     def __getitem__(self, coord):
         x, y = coord
-        return selt._gMat[x][y]
+        return self._mat[x][y].color
     
     def updateSet(self, colorToUpdate):
         i = 0
