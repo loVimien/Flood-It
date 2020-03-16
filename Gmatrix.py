@@ -65,12 +65,14 @@ class GMatrix:
         if len(self._currSet) == len(self._mat) * len(self._mat[0]):
         # Si le nombre de carré de la nouvelle couleur est égal au nombre total alors toute la grille est remplie
         # Le Flood It est rempli d'une seule couleur
-            print("Vous avez gagné en", self._moves, "coups !") # Ajouter le nombre de coups
-            self._window.quit()
-            # window.destroy()
+            self.destroySquares()
+            winText = Label(self._window, text="Vous avez gagné", font=self._textFont)
+            winText.grid(row=1, column=0, columnspan=10)
         return False
-    def destroyAll(self):
-        self._labelMoves.destroy()
+    def destroySquares(self):
         for i in self._mat:
             for j in i:
                 j.destroy()
+    def destroyAll(self):
+        self._labelMoves.destroy()
+        self.destroySquares()
