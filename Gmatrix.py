@@ -14,7 +14,7 @@ class GMatrix:
             for j in range(nbCols):
                 line.append(Square(choice(list(PossibleColor)), master, sqDim, i, j, self))
             self._mat.append(line)
-        self._moves = 0
+        self._moves = -1
         self._currSet = [[self._mat[0][0].color, 0, 0]]
         
         self._textFont = font.Font(family='Helvetica', size=12, weight='bold')
