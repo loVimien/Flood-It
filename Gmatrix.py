@@ -22,6 +22,7 @@ class GMatrix:
         self._textMoves.set("Coups joués : 0")
         self._labelMoves = Label(self._window, textvariable=self._textMoves, font=self._textFont)
         self._labelMoves.grid(row = 0, column = 0, columnspan=5)
+        self._textWin = None
 
     def __getitem__(self, coord):
         x, y = coord
@@ -66,13 +67,15 @@ class GMatrix:
         # Si le nombre de carré de la nouvelle couleur est égal au nombre total alors toute la grille est remplie
         # Le Flood It est rempli d'une seule couleur
             self.destroySquares()
-            winText = Label(self._window, text="Vous avez gagné", font=self._textFont)
-            winText.grid(row=1, column=0, columnspan=10)
+            self._textWin = Label(self._window, text="Vous avez gagné", font=self._textFont)
+            self._textWin.grid(row=1, column=0, columnspan=10)
         return False
     def destroySquares(self):
         for i in self._mat:
             for j in i:
                 j.destroy()
     def destroyAll(self):
+        if self._textWin != None:
+            self._textWin.destroy()
         self._labelMoves.destroy()
         self.destroySquares()
