@@ -2,6 +2,7 @@ from tkinter import StringVar, Label, font
 from square import Square
 from possibleColor import PossibleColor
 from random import choice
+from solve import *
 
 class GMatrix:
     def __init__(self, master, nbLines, nbCols, sqDim):
@@ -26,6 +27,11 @@ class GMatrix:
 
 
         self.updateSet(self[(0, 0)])
+
+        resoudre = Solve(self._mat, self._currSet)
+        print(f"Nombre de coups en aléatoire : {resoudre.solveMat()}")
+
+
 
     def __getitem__(self, coord):
         x, y = coord

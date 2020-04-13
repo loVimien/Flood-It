@@ -1,5 +1,4 @@
 from tkinter import *
-from random import choice
 from possibleColor import PossibleColor
 
 class Square(Canvas):
