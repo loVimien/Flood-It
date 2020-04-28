@@ -7,9 +7,12 @@ class Square(Canvas):
         super().__init__(master, width = t, height = t, background = self._currentColor.name)
         self._mat = matParent
         self.bind('<Button-1>', self.onMouse)
-        self.grid(row = posi, column = posj)
+        self._i = posi
+        self._j = posj
     def onMouse(self, event):
-        self._mat.updateSet(self._currentColor)
+        self._mat.play(self._currentColor)
+    def display(self):
+        self.grid(row = self._i, column = self._j)
     def _set_Color(self, color):
         if(color != self._currentColor):
             self._currentColor = color
