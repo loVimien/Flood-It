@@ -20,26 +20,33 @@ class Solve:
         self.saveCurrSet = self._currSet.copy()
         self.saveMoves = self._moves
 
+
     def restoreMatrix(self):
         self._mat = self.saveMat
         self._currSet = self.saveCurrSet
         self._moves = self.saveMoves
 
+
     def randomColor(self):
         """Renvoie une couleur aléatoire"""
         return choice(list(PossibleColor))
 
+
     def greedyColor(self):
         """Renvoie la couleur qui maximise le remplissage"""
-        max = 0
-        self.saveMatrix()
+        max = 0 # Nombre maximum de cases remplies
+        saveMat = self._mat.copy()
+        saveCurrSet = self._currSet.copy()
+        saveMoves = self._moves
         maxColor = choice(list(PossibleColor))
         for color in list(PossibleColor):
             self.updateMat(color)
             if len(self._currSet) > max:
                 max = len(self._currSet)
                 maxColor = color
-            self.restoreMatrix()
+            self._mat = saveMat.copy()
+            self._currSet = saveCurrSet.copy()
+            self._moves = saveMoves
         # print(maxColor)
         return maxColor
 
@@ -85,6 +92,7 @@ class Solve:
         nbMoves = self._moves
         self.restoreMatrix()
         return nbMoves
+
 
     def greedySolve(self):
         """Méthode de résolution où à chaque tour, on colore un maximum de cases"""
