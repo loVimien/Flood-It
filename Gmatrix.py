@@ -29,7 +29,7 @@ class GMatrix:
         nbCoupsRand = resoudre.randSolve()
         nbCoupsGreed = resoudre.greedySolve()
         self._textMoves.set("Coups joués : 0,\n nombre de coups possible de manière aléatoire : {},\n nombre de coups possibles avec l'algorithme greedy {}".format(nbCoupsRand, nbCoupsGreed))
-        print(f"Nombre de coups en aléatoire : {nbCoupsRand}")
+        print(f"Nombre de coups avec l'algorithme Greedy : {nbCoupsRand}")
         print(f"Nombre de coups en aléatoire : {nbCoupsGreed}")
 
     def display(self):
