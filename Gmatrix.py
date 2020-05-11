@@ -17,7 +17,7 @@ class GMatrix:
             self._mat.append(line)
         self._moves = 0
         self._currSet = [[self._mat[0][0].color, 0, 0]]
-        self._textFont = font.Font(family='Helvetica', size=6, weight='bold')
+        self._textFont = font.Font(family='Helvetica', size=10, weight='bold')
         self._textMoves = StringVar()
         self._labelMoves = Label(self._window, textvariable=self._textMoves, font=self._textFont)
         self._textWin = Label(self._window, text="Vous avez gagné", font=self._textFont)
@@ -28,8 +28,9 @@ class GMatrix:
         resoudre = Solve(self, self._currSet, self._moves)
         nbCoupsRand = resoudre.randSolve()
         nbCoupsGreed = resoudre.greedySolve()
-        self._textMoves.set("Coups joués : 0, nombre de coups possible de manière aléatoire : {}, nombre de coups possibles avec l'algorithme greedy {}".format(nbCoupsRand, nbCoupsGreed))
-        print(f"Nombre de coups en aléatoire : {resoudre.greedySolve()}")
+        self._textMoves.set("Coups joués : 0,\n nombre de coups possible de manière aléatoire : {},\n nombre de coups possibles avec l'algorithme greedy {}".format(nbCoupsRand, nbCoupsGreed))
+        print(f"Nombre de coups en aléatoire : {nbCoupsRand}")
+        print(f"Nombre de coups en aléatoire : {nbCoupsGreed}")
 
     def display(self):
         self._labelMoves.grid(row = 0, column = 0, columnspan=8)
@@ -86,7 +87,6 @@ class GMatrix:
         if len(self._currSet) == len(self._mat) * len(self._mat[0]):
         # Si le nombre de carré de la nouvelle couleur est égal au nombre total alors toute la grille est remplie
         # Le Flood It est rempli d'une seule couleur
-            print("True")
             return True
         else:
             return False

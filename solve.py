@@ -43,7 +43,6 @@ class Solve:
             self._mat._mat = saveMat.copy()
             self._mat._currSet = saveCurrSet.copy()
             self._moves = saveMoves
-        print(maxColor)
         return maxColor
 
     def randSolve(self):
