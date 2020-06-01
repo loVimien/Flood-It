@@ -29,8 +29,8 @@ class GMatrix:
         nbCoupsRand = resoudre.randSolve()
         nbCoupsGreed = resoudre.greedySolve()
         self._textMoves.set("Coups joués : 0,\n nombre de coups possible de manière aléatoire : {},\n nombre de coups possibles avec l'algorithme greedy {}".format(nbCoupsRand, nbCoupsGreed))
-        print(f"Nombre de coups avec l'algorithme Greedy : {nbCoupsRand}")
-        print(f"Nombre de coups en aléatoire : {nbCoupsGreed}")
+        print(f"Nombre de coups avec l'algorithme Greedy : {nbCoupsGreed}.")
+        print(f"Nombre de coups en aléatoire : {nbCoupsRand}.")
 
     def display(self):
         self._labelMoves.grid(row = 0, column = 0, columnspan=8)
@@ -94,7 +94,7 @@ class GMatrix:
     def win(self):
         self.destroySquares()
         self._textWin.grid(row=1, column=0, columnspan=10)
-        print(len(self._currSet))
+        # print(len(self._currSet))
 
     def destroySquares(self):
         for i in self._mat:
