@@ -3,6 +3,7 @@ from square import Square
 from possibleColor import PossibleColor
 from random import choice
 from solve import *
+import time
 
 class GMatrix:
     def __init__(self, master, nbLines, nbCols, sqDim):
@@ -25,12 +26,28 @@ class GMatrix:
 
         self.updateSet(self[(0, 0)])
 
+        self.solveMatrix()
+
+    def solveMatrix(self):
         resoudre = Solve(self, self._currSet, self._moves)
+
+        begin = time.time()
         nbCoupsRand = resoudre.randSolve()
-        nbCoupsGreed = resoudre.greedySolve()
-        self._textMoves.set("Coups joués : 0,\n nombre de coups possible de manière aléatoire : {},\n nombre de coups possibles avec l'algorithme greedy {}".format(nbCoupsRand, nbCoupsGreed))
-        print(f"Nombre de coups avec l'algorithme Greedy : {nbCoupsGreed}.")
         print(f"Nombre de coups en aléatoire : {nbCoupsRand}.")
+        print(f"Durée = {time.time() - begin} secondes.\n")
+
+        begin = time.time()
+        nbCoupsGreed = resoudre.greedySolve()
+        print(f"Nombre de coups avec l'algorithme Greedy : {nbCoupsGreed}.")
+        print(f"Durée = {time.time() - begin} secondes.\n")
+
+        begin = time.time()
+        nbCoupsForce = resoudre.forceSolve()
+        print(f"Nombre de coups avec plusieurs tours de projection : {nbCoupsForce}.")
+        print(f"Durée = {time.time() - begin} secondes.\n")
+
+        self._textMoves.set("Coups joués : 0,\n nombre de coups possible de manière aléatoire : {},\n nombre de coups possibles avec l'algorithme greedy {},\n nombre de coups possibles avec plusieurs tours de projection {}".format(nbCoupsRand, nbCoupsGreed, nbCoupsForce))
+
 
     def display(self):
         self._labelMoves.grid(row = 0, column = 0, columnspan=8)
