@@ -33,6 +33,8 @@ class GMatrix:
     def solveFloodIt(self):
         resoudre = Solve(self, self._currSet, self._moves)
 
+        print("Génération et résolution de la grille ...\n" + 32 * "- ")
+
         begin = time.time()
         nbCoupsRand = resoudre.solve(resoudre.randomColor)
         print(f"Nombre de coups en aléatoire : {nbCoupsRand}.")
