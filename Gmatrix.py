@@ -22,6 +22,7 @@ class GMatrix:
         self._textMoves = StringVar()
         self._labelMoves = Label(self._window, textvariable=self._textMoves, font=self._textFont)
         self._textWin = Label(self._window, text="Vous avez gagné", font=self._textFont)
+        self._textPredic = None
 
 
         self.updateSet(self[(0, 0)])
@@ -47,7 +48,8 @@ class GMatrix:
         print(f"Nombre de coups avec plusieurs tours de projection : {nbCoupsForce}.")
         print(f"Durée = {time.time() - begin} secondes.\n")
 
-        self._textMoves.set("Coups joués : 0,\n nombre de coups possible de manière aléatoire : {},\n nombre de coups possibles avec l'algorithme greedy {},\n nombre de coups possibles avec plusieurs tours de projection {}".format(nbCoupsRand, nbCoupsGreed, nbCoupsForce))
+        self._textPredic = "nombre de coups possible de manière aléatoire : {},\n nombre de coups possibles avec l'algorithme greedy {},\n nombre de coups possibles avec plusieurs tours de projection {}".format(nbCoupsRand, nbCoupsGreed, nbCoupsForce)
+        self._textMoves.set("Coups joués : 0\n" + self._textPredic)
 
 
     def display(self):
@@ -88,7 +90,7 @@ class GMatrix:
     def play(self, colorToUpdate):
         self.updateSet(colorToUpdate)
         self._moves += 1
-        self._textMoves.set("Coups joués : {}".format(self._moves))
+        self._textMoves.set("Coups joués : {}\n".format(self._moves) + self._textPredic)
         self.updateGraphicMatrix()
 
         if self.isFill():
