@@ -23,6 +23,7 @@ class GMatrix:
         self._labelMoves = Label(self._window, textvariable=self._textMoves, font=self._textFont)
         self._textWin = Label(self._window, text="Vous avez gagné", font=self._textFont)
         self._textPredic = None
+        self._save = (self._mat.copy(), self._currSet.copy())
 
 
         self.updateSet(self[(0, 0)])
@@ -31,27 +32,31 @@ class GMatrix:
 
 
     def solveFloodIt(self):
-        resoudre = Solve(self, self._currSet, self._moves)
 
         print("Génération et résolution de la grille ...\n" + 32 * "- ")
 
         begin = time.time()
-        nbCoupsRand = resoudre.solve(resoudre.randomColor)
+        nbCoupsRand = Solve.solve(self, Solve.randomColor)
         print(f"Nombre de coups en aléatoire : {nbCoupsRand}.")
         print(f"Durée = {time.time() - begin} secondes.\n")
 
         begin = time.time()
-        nbCoupsGreed = resoudre.solve(resoudre.greedyColor)
+        nbCoupsGreed = Solve.solve(self, Solve.greedyColor)
         print(f"Nombre de coups avec l'algorithme Greedy : {nbCoupsGreed}.")
         print(f"Durée = {time.time() - begin} secondes.\n")
 
         begin = time.time()
-        nbCoupsForce = resoudre.solve(resoudre.forceColor)
+        nbCoupsForce = Solve.solve(self, Solve.forceColor)
         print(f"Nombre de coups avec plusieurs tours de projection : {nbCoupsForce}.")
         print(f"Durée = {time.time() - begin} secondes.\n")
 
         self._textPredic = "nombre de coups possible de manière aléatoire : {},\n nombre de coups possibles avec l'algorithme greedy {},\n nombre de coups possibles avec plusieurs tours de projection {}".format(nbCoupsRand, nbCoupsGreed, nbCoupsForce)
         self._textMoves.set("Coups joués : 0\n" + self._textPredic)
+
+        graph = Solve.model_graph_vertices(self)
+        print(graph)
+        print("\n")
+        bfs = Solve.bfs(graph, "v0")
 
 
     def display(self):
@@ -64,6 +69,12 @@ class GMatrix:
     def __getitem__(self, coord):
         x, y = coord
         return self._mat[x][y].color
+
+    def resetMatrix(self):
+        self._mat = self._save[0]
+        self._currSet = self._save[1]
+        self._moves = 0
+        self._textMoves.set("")
 
     def updateSet(self, colorToUpdate):
         i = 0
