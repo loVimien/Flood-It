@@ -26,23 +26,24 @@ class GMatrix:
 
         self.updateSet(self[(0, 0)])
 
-        self.solveMatrix()
+        self.solveFloodIt()
 
-    def solveMatrix(self):
+
+    def solveFloodIt(self):
         resoudre = Solve(self, self._currSet, self._moves)
 
         begin = time.time()
-        nbCoupsRand = resoudre.randSolve()
+        nbCoupsRand = resoudre.solve(resoudre.randomColor)
         print(f"Nombre de coups en aléatoire : {nbCoupsRand}.")
         print(f"Durée = {time.time() - begin} secondes.\n")
 
         begin = time.time()
-        nbCoupsGreed = resoudre.greedySolve()
+        nbCoupsGreed = resoudre.solve(resoudre.greedyColor)
         print(f"Nombre de coups avec l'algorithme Greedy : {nbCoupsGreed}.")
         print(f"Durée = {time.time() - begin} secondes.\n")
 
         begin = time.time()
-        nbCoupsForce = resoudre.forceSolve()
+        nbCoupsForce = resoudre.solve(resoudre.forceColor)
         print(f"Nombre de coups avec plusieurs tours de projection : {nbCoupsForce}.")
         print(f"Durée = {time.time() - begin} secondes.\n")
 

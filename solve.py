@@ -1,5 +1,4 @@
 from possibleColor import PossibleColor
-# from Gmatrix import updateSet
 
 from random import choice
 
@@ -72,34 +71,12 @@ class Solve:
         # print(f"maxColor : {maxColor} | max : {max} | isFill : {self._mat.isFill()} | len(currSet) : {len(self._mat._currSet)} | nbCarrés : {len(self._mat._mat) * len(self._mat._mat[0])}")
         return maxColor
 
-    def randSolve(self):
-        """Méthode de résolution aléatoire"""
-        self.saveMatrix()
-        while not self._mat.isFill():
-            self._mat.updateSet(self.randomColor())
-            self._moves += 1
-        # On remet tout dans la situation initiale pour pouvoir utiliser d'autres algorithmes de résolution
-        nbMoves = self._moves
-        self.restoreMatrix()
-        return nbMoves
 
-    def greedySolve(self):
-        """Méthode de résolution où à chaque tour, on colore un maximum de cases"""
+    def solve(self, funColor):
+        """Retourne le nombre de coups nécessaires pour remplir le flood-it étant donné une fonction funColor de choix de la couleur."""
         self.saveMatrix()
         while not self._mat.isFill():
-            self._mat.updateSet(self.greedyColor())
-            self._moves += 1
-        # On remet tout dans la situation initiale pour pouvoir utiliser d'autres algorithmes de résolution
-        nbMoves = self._moves
-        self.restoreMatrix()
-        return nbMoves
-
-    def forceSolve(self):
-        """Méthode de résolution qui rempli un maximum de cases avec 4 tours d'avance."""
-        self.saveMatrix()
-        while not self._mat.isFill():
-            self._mat.updateSet(self.forceColor())
-            # print(f"{len(self._mat._currSet)}")
+            self._mat.updateSet(funColor())
             self._moves += 1
         # On remet tout dans la situation initiale pour pouvoir utiliser d'autres algorithmes de résolution
         nbMoves = self._moves
