@@ -1,7 +1,6 @@
 from possibleColor import PossibleColor
 import networkx as nx
 from random import choice
-import matplotlib.pyplot as plt
 
 class Solve:
     @staticmethod
