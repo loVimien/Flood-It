@@ -1,4 +1,3 @@
-from Gmatrix import GMatrix
 import os
 
 def main():
@@ -27,24 +26,16 @@ def main():
     window.mainloop()
 
 if __name__ == "__main__":
+    try:
+        import networkx
     except Exception:
-        print("Installing networkx")
-        try:
-            os.system("python -m pip install networkx")
-        except Exception:
-            print("Error with pip. Install pip, check your installation or check your connection")
-            quit()
+        print("The library networkx isn't installed. Please install it with pip install networkx")
+        quit()
     try:
         from tkinter import *
     except Exception:
-        print("Installing tkinter")
-        try:
-            os.system("python -m pip install tkinter")
-        except Exception:
-            print("Error with pip. Install pip, check your installation or check your connection")
-            quit()
-    try:
-        import networkx
+        print("The library tkinter isn't installed. Please install it with pip install tkinter")
+    from Gmatrix import GMatrix
     main()
     
     
