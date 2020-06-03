@@ -27,6 +27,13 @@ def main():
     window.mainloop()
 
 if __name__ == "__main__":
+    except:
+        print("Installing networkx")
+        try:
+            os.system("python -m pip install networkx")
+        except:
+            print("Error with pip. Install pip, check your installation or check your connection")
+            quit()
     try:
         from tkinter import *
     except:
@@ -38,13 +45,6 @@ if __name__ == "__main__":
             quit()
     try:
         import networkx
-    except:
-        print("Installing networkx")
-        try:
-            os.system("python -m pip install networkx")
-        except:
-            print("Error with pip. Install pip, check your installation or check your connection")
-            quit()
     main()
     
     
