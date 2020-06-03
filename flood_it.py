@@ -29,7 +29,7 @@ def main():
 if __name__ == "__main__":
     try:
         from tkinter import *
-    except ImportError:
+    except:
         print("Installing tkinter")
         try:
             os.system("python -m pip install tkinter")
@@ -38,7 +38,7 @@ if __name__ == "__main__":
             quit()
     try:
         import networkx
-    except ImportError:
+    except:
         print("Installing networkx")
         try:
             os.system("python -m pip install networkx")
