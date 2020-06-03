@@ -73,9 +73,11 @@ class GMatrix:
     def resetMatrix(self):
         self._currSet = self._saveSet.copy()
         self._moves = 0
+        self._textWin.grid_forget()
         for i in range(len(self._mat)):
             for j in range(len(self._mat[i])):
                 self._mat[i][j].color = self._saveMat[i][j]
+                self._mat[i][j].display()
         self._textMoves.set("Coups joués : 0\n" + self._textPredic)
 
     def updateSet(self, colorToUpdate):
@@ -127,10 +129,15 @@ class GMatrix:
             return False
 
     def win(self):
-        self.destroySquares()
-        self._textWin.grid(row=1, column=0, columnspan=10)
+        self.hideSquares()
+        self._textWin.grid(row=self._mat[0][0].vert, column=0, columnspan=10)
         # print(len(self._currSet))
 
+    def hideSquares(self):
+        for i in self._mat:
+            for j in i:
+                j.grid_forget()
+    
     def destroySquares(self):
         for i in self._mat:
             for j in i:

@@ -31,7 +31,7 @@ class Solve:
                 max = len(matrix._currSet)
                 maxColor = color
             Solve.restoreMatrix(matrix, save)
-        print(maxColor, "greedy")
+        #print(maxColor, "greedy")
         return maxColor
 
     @staticmethod
@@ -58,7 +58,7 @@ class Solve:
                             maxColor = color1
                         Solve.restoreMatrix(matrix, save)
         #print(f"maxColor : {maxColor} | max : {max} | isFill : {self._mat.isFill()} | len(currSet) : {len(self._mat._currSet)} | nbCarrés : {len(self._mat._mat) * len(self._mat._mat[0])}")
-        print(maxColor, "force")
+        #print(maxColor, "force")
         return maxColor
 
     @staticmethod

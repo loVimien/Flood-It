@@ -19,4 +19,10 @@ class Square(Canvas):
             self.configure(background = self._currentColor.name)
     def _get_Color(self):
         return self._currentColor
+    def _get_horiz_pos(self):
+        return self._j
+    def _get_vert_pos(self):
+        return self._i
     color = property(_get_Color, _set_Color)
+    horiz = property(_get_horiz_pos)
+    vert = property(_get_vert_pos)
