@@ -4,6 +4,7 @@ from possibleColor import PossibleColor
 from random import choice
 from solve import *
 import time
+import networkx as nx
 
 class GMatrix:
     def __init__(self, master, nbLines, nbCols, vertoffset, horizoffset, sqDim):
@@ -55,6 +56,11 @@ class GMatrix:
         nbCoupsForce = Solve.solve(self, Solve.forceColor)
         print(f"Nombre de coups avec plusieurs tours de projection : {nbCoupsForce}.")
         print(f"Durée = {time.time() - begin} secondes.\n")
+
+        begin = time.time()
+        nbCoupsGraph = Solve.resolve_with_graph(self)
+        print("Nombre de coups avec la résolution par graphe : {}".format(nbCoupsGraph))
+        print("Durée = {} secondes".format(time.time() - begin))
 
         self._textPredic = "nombre de coups possible de manière aléatoire : {},\n nombre de coups possibles avec l'algorithme greedy {},\n nombre de coups possibles avec plusieurs tours de projection {}".format(nbCoupsRand, nbCoupsGreed, nbCoupsForce)
         self._textMoves.set("Coups joués : 0\n" + self._textPredic)

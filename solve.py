@@ -1,7 +1,7 @@
 from possibleColor import PossibleColor
-
+import networkx as nx
 from random import choice
-
+import matplotlib.pyplot as plt
 
 class Solve:
     @staticmethod
@@ -70,5 +70,116 @@ class Solve:
                 matrix.updateSet(funColor(matrix))
                 moves += 1
         # On remet tout dans la situation initiale pour pouvoir utiliser d'autres algorithmes de résolution
+        Solve.restoreMatrix(matrix, save)
+        return moves
+    def model_graph(matrix):
+        vertices = {}
+        mat_rep = []
+        for i in range(len(matrix.mat)):
+            line = []
+            for j in range(len(matrix.mat[i])):
+                line.append([matrix[(i,j)], None])
+            mat_rep.append(line)
+        current_new_vertex = 0
+        for i in range(len(mat_rep)):
+            for j in range(len(mat_rep[i])):
+                current_vertex = ""
+                if mat_rep[i][j][1] == None:
+                    vertices["v{}".format(current_new_vertex)] = [(i,j)]
+                    mat_rep[i][j][1] = "v{}".format(current_new_vertex)
+                    current_vertex = "v{}".format(current_new_vertex)
+                    current_new_vertex += 1
+                else:
+                    current_vertex = mat_rep[i][j][1]
+                if i-1 >= 0 and mat_rep[i][j][0] == mat_rep[i-1][j][0] and mat_rep[i-1][j][1] == None:
+                    vertices[current_vertex].append((i-1,j))
+                    mat_rep[i-1][j][1] = current_vertex
+                if i+1 < len(mat_rep) and mat_rep[i][j][0] == mat_rep[i+1][j][0] and mat_rep[i+1][j][1] == None:
+                    vertices[current_vertex].append((i+1,j))
+                    mat_rep[i+1][j][1] = current_vertex
+                if j-1 >= 0 and mat_rep[i][j][0] == mat_rep[i][j-1][0] and mat_rep[i][j-1][1] == None:
+                    vertices[current_vertex].append((i,j-1))
+                    mat_rep[i][j-1][1] = current_vertex
+                if j+1 < len(mat_rep[i]) and mat_rep[i][j][0] == mat_rep[i][j+1][0] and mat_rep[i][j+1][1] == None:
+                    vertices[current_vertex].append((i,j+1))
+                    mat_rep[i][j+1][1] = current_vertex
+        graph = nx.Graph()
+        for i in vertices.keys():
+            graph.add_node(i)
+        for i in range(len(mat_rep)):
+            for j in range(len(mat_rep[i])):
+                if i-1 >= 0 and mat_rep[i][j][1] != mat_rep[i-1][j][1] and (mat_rep[i][j][1], mat_rep[i-1][j][1]) not in graph.edges() and (mat_rep[i-1][j][1], mat_rep[i][j][1]) not in graph.edges():
+                    graph.add_edge(mat_rep[i][j][0], mat_rep[i-1][j][1])
+                if i+1 < len(mat_rep) and mat_rep[i][j][1] != mat_rep[i+1][j][1] and (mat_rep[i][j][1], mat_rep[i+1][j][1]) not in graph.edges() and (mat_rep[i+1][j][1], mat_rep[i][j][1]) not in graph.edges():
+                    graph.add_edge(mat_rep[i][j][1], mat_rep[i+1][j][1])
+                if j-1 >= 0 and mat_rep[i][j][1] != mat_rep[i][j-1][1] and (mat_rep[i][j][1], mat_rep[i][j-1][1]) not in graph.edges() and (mat_rep[i][j-1][1], mat_rep[i][j][1]) not in graph.edges():
+                    graph.add_edge(mat_rep[i][j][1], mat_rep[i][j-1][1])
+                if j+1 < len(mat_rep[i]) and mat_rep[i][j][1] != mat_rep[i][j+1][1] and (mat_rep[i][j][1], mat_rep[i][j+1][1]) not in graph.edges() and (mat_rep[i][j+1][1], mat_rep[i][j][1]) not in graph.edges():
+                    graph.add_edge(mat_rep[i][j][1], mat_rep[i][j+1][1])
+        return graph, vertices
+
+    def generate_dictionnary_graph(graph):
+        d_graph = {}
+        for i in graph.nodes():
+            d_graph[i] = []
+            for j in graph.neighbors(i):
+                d_graph[i].append(j)
+        return d_graph
+    
+    def number_of_vertices(graph):
+        """Returns the number of vertices of the graph."""
+        return len(graph.keys())
+    
+    def bfs(rgraph, r):
+        """Makes the BFS of the graph from vertex r. Returns a tuple
+        (parent, d, color)."""
+        graph = Solve.generate_dictionnary_graph(rgraph)
+        parent = {}
+        d = {}
+        color = {}
+        for i in graph:
+            if i != r:
+                color[i] = 'b'
+                parent[i] = None
+                d[i] = Solve.number_of_vertices(graph) + 1
+        f = []
+        f.append(r)
+        color[r] = 'g'
+        d[r] = 0
+        while len(f) != 0:
+            u = f[0]
+            for i in graph[u]:
+                if color[i] == 'b':
+                    color[i] = 'g'
+                    d[i] = d[u] + 1
+                    parent[i] = u
+                    f.append(i)
+            f.pop(0)
+            color[u] = 'n'
+        return (parent, d, color)
+    
+    def furthest_node(graph):
+        bfs = Solve.bfs(graph, "v0")
+        max = 0
+        node = "v0"
+        for i,j in bfs[1].items():
+            node = i if j > max else node
+            max = j if j > max else max
+        return node
+    
+    def shortest_path_to_furthest_node(graph):
+        return nx.shortest_path(graph, "v0", Solve.furthest_node(graph))
+    
+    def resolve_with_graph(matrix):
+        graph, vertices = Solve.model_graph(matrix)
+        path = Solve.shortest_path_to_furthest_node(graph)
+        save = Solve.saveMatrix(matrix)
+        moves = 0
+        for i in path:
+            matrix.updateSet(matrix[vertices[i][0]])
+            moves += 1
+        while not matrix.isFill():
+            matrix.updateSet(Solve.greedyColor(matrix))
+            moves += 1
         Solve.restoreMatrix(matrix, save)
         return moves
