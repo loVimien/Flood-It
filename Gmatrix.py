@@ -6,16 +6,21 @@ from solve import *
 import time
 
 class GMatrix:
-    def __init__(self, master, nbLines, nbCols, sqDim):
+    def __init__(self, master, nbLines, nbCols, vertoffset, horizoffset, sqDim):
         self._lines = nbLines
         self._colums = nbCols
         self._window = master
         self._mat = []
-        for i in range(1, nbLines):
+        self._saveMat = []
+        for i in range(vertoffset, nbLines+vertoffset):
             line = []
-            for j in range(nbCols):
-                line.append(Square(choice(list(PossibleColor)), master, sqDim, i, j, self))
+            lineSave = []
+            for j in range(horizoffset, nbCols+horizoffset):
+                color = choice(list(PossibleColor))
+                lineSave.append(color)
+                line.append(Square(color, master, sqDim, i, j, self))
             self._mat.append(line)
+            self._saveMat.append(lineSave)
         self._moves = 0
         self._currSet = [[self._mat[0][0].color, 0, 0]]
         self._textFont = font.Font(family='Helvetica', size=10, weight='bold')
@@ -27,6 +32,7 @@ class GMatrix:
 
 
         self.updateSet(self[(0, 0)])
+        self._saveSet = self._currSet.copy()
 
         self.solveFloodIt()
 
@@ -53,14 +59,8 @@ class GMatrix:
         self._textPredic = "nombre de coups possible de manière aléatoire : {},\n nombre de coups possibles avec l'algorithme greedy {},\n nombre de coups possibles avec plusieurs tours de projection {}".format(nbCoupsRand, nbCoupsGreed, nbCoupsForce)
         self._textMoves.set("Coups joués : 0\n" + self._textPredic)
 
-        graph = Solve.model_graph_vertices(self)
-        print(graph)
-        print("\n")
-        bfs = Solve.bfs(graph, "v0")
-
-
-    def display(self):
-        self._labelMoves.grid(row = 0, column = 0, columnspan=8)
+    def display(self, span):
+        self._labelMoves.grid(row = 0, column = 0, columnspan=8, rowspan=span)
         for i in self._mat:
             for j in i:
                 j.display()
@@ -71,10 +71,12 @@ class GMatrix:
         return self._mat[x][y].color
 
     def resetMatrix(self):
-        self._mat = self._save[0]
-        self._currSet = self._save[1]
+        self._currSet = self._saveSet.copy()
         self._moves = 0
-        self._textMoves.set("")
+        for i in range(len(self._mat)):
+            for j in range(len(self._mat[i])):
+                self._mat[i][j].color = self._saveMat[i][j]
+        self._textMoves.set("Coups joués : 0\n" + self._textPredic)
 
     def updateSet(self, colorToUpdate):
         i = 0
