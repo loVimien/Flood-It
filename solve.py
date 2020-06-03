@@ -6,12 +6,12 @@ from random import choice
 class Solve:
     @staticmethod
     def saveMatrix(matrix):
-        return matrix._mat.copy(), matrix._currSet.copy()
+        return matrix.mat.copy(), matrix.currSet.copy()
 
     @staticmethod
     def restoreMatrix(matrix, copy):
-        matrix._mat = copy[0].copy()
-        matrix._currSet = copy[1].copy()
+        matrix.mat = copy[0].copy()
+        matrix.currSet = copy[1].copy()
 
     @staticmethod
     def randomColor(matrix=None):
@@ -27,8 +27,8 @@ class Solve:
         save = Solve.saveMatrix(matrix)
         for color in list(PossibleColor):
             matrix.updateSet(color)
-            if len(matrix._currSet) > max:
-                max = len(matrix._currSet)
+            if len(matrix.currSet) > max:
+                max = len(matrix.currSet)
                 maxColor = color
             Solve.restoreMatrix(matrix, save)
         #print(maxColor, "greedy")
@@ -49,9 +49,9 @@ class Solve:
                         matrix.updateSet(color2)
                         matrix.updateSet(color3)
                         matrix.updateSet(color4)
-                        if len(matrix._currSet) > max:
-                            max = len(matrix._currSet)
-                            if max == len(matrix._mat) * len(matrix._mat[0]):
+                        if len(matrix.currSet) > max:
+                            max = len(matrix.currSet)
+                            if max == len(matrix.mat) * len(matrix.mat[0]):
                                 # Au dernier tour il ne faut regarder qu'avec 1 tour d'avance
                                 Solve.restoreMatrix(matrix, save)
                                 return Solve.greedyColor(matrix)

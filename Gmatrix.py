@@ -148,3 +148,18 @@ class GMatrix:
             self._textWin.destroy()
         self._labelMoves.destroy()
         self.destroySquares()
+    
+    def _get_mat(self):
+        return self._mat
+    
+    def _set_mat(self, mat):
+        self._mat = mat
+
+    def _get_set(self):
+        return self._currSet
+    
+    def _set_set(self, s):
+        self._currSet = s
+    
+    mat = property(_get_mat, _set_mat)
+    currSet = property(_get_set, _set_set)
