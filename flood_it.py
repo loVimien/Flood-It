@@ -27,20 +27,20 @@ def main():
     window.mainloop()
 
 if __name__ == "__main__":
-    except:
+    except Exception:
         print("Installing networkx")
         try:
             os.system("python -m pip install networkx")
-        except:
+        except Exception:
             print("Error with pip. Install pip, check your installation or check your connection")
             quit()
     try:
         from tkinter import *
-    except:
+    except Exception:
         print("Installing tkinter")
         try:
             os.system("python -m pip install tkinter")
-        except:
+        except Exception:
             print("Error with pip. Install pip, check your installation or check your connection")
             quit()
     try:
