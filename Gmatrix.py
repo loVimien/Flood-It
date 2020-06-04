@@ -9,12 +9,12 @@ import networkx as nx
 class GMatrix:
     def __init__(self, master, nbLines, nbCols, vertoffset, horizoffset, sqDim):
         if nbLines <=0 or nbCols <= 0:
-            raise ValueError("Le nombre de lignes et de colones doit être supérieur à 0 !")
-        self._lines = nbLines
-        self._colums = nbCols
-        self._window = master
-        self._mat = []
-        self._saveMat = []
+            raise ValueError("Le nombre de lignes et le nombre de colonnes doit être supérieur à 0 !")
+        self._lines = nbLines # Nombre de lignes de la matrices
+        self._colums = nbCols # Nombre de colonnes de la matrices
+        self._window = master # Fenêtre parent
+        self._mat = [] # Matrice contenant les éléments Square
+        self._saveMat = [] # Matrice contenant uniquement la couleur des carrés (servira pour réinitialiser la grille)
         for i in range(vertoffset, nbLines+vertoffset):
             line = []
             lineSave = []
@@ -24,18 +24,17 @@ class GMatrix:
                 line.append(Square(color, master, sqDim, i, j, self))
             self._mat.append(line)
             self._saveMat.append(lineSave)
-        self._moves = 0
-        self._currSet = [[self._mat[0][0].color, 0, 0]]
-        self._textFont = font.Font(family='Helvetica', size=10, weight='bold')
-        self._textMoves = StringVar()
-        self._labelMoves = Label(self._window, textvariable=self._textMoves, font=self._textFont)
-        self._textWin = Label(self._window, text="Vous avez gagné !", font=self._textFont)
-        self._textPredic = None
-        self._save = (self._mat.copy(), self._currSet.copy())
+        self._moves = 0 # Nombre de coups joués
+        self._currSet = [[self._mat[0][0].color, 0, 0]] # Ensemble des cases contenues dans raz de marée
+        self._textFont = font.Font(family='Helvetica', size=10, weight='bold') # Police d'écriture des différents textes
+        self._textMoves = StringVar() # Texte variable contenant le nombre de coups joués
+        self._labelMoves = Label(self._window, textvariable=self._textMoves, font=self._textFont) # Label affichant le nombre de coups joués en utilisant textFont et textMoves
+        self._textWin = Label(self._window, text="Vous avez gagné !", font=self._textFont) # Label affichant le texte indiquant au joueur qu'il à gagné
+        self._textPredic = None # Texte contenant les nombres de coups calculés par les algorithmes de résolution
 
 
         self.updateSet(self[(0, 0)])
-        self._saveSet = self._currSet.copy()
+        self._saveSet = self._currSet.copy() #Copie du set d'origine
 
         self.solveFloodIt()
 

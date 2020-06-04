@@ -1,7 +1,7 @@
-mat = None
-nbLines = 10
-nbColumns = 10
-squareDim = 50
+mat = None # Variable globale qui contiendra l'objet GMatrix courant
+nbLines = 10 # Nombre de ligne de la grille à créer
+nbColumns = 10 # Nombre de colonnes de la grille à créer
+squareDim = 50 # Dimension des carrés à créer
 
 def main():
     def new_grid():
@@ -23,14 +23,14 @@ def main():
     global nbLines
     global nbColumns
     global squareDim
-    window = Tk()
-    window.title("Flood it")
-    icon = PhotoImage(file='icon.png')
+    window = Tk() # Fenêtre principale Tkinter
+    window.title("Flood it") # Titre de la fenêtre
+    icon = PhotoImage(file='icon.png') # Icone de la fenêtre
     window.iconphoto(True, icon)
     mat = GMatrix(window, nbLines, nbColumns, 2, 0, squareDim)
     mat.display(2)
-    b_new = Button(window, text="Nouvelle grille", command=new_grid)
-    b_reset = Button(window, text="Recommencer", command=reset)
+    b_new = Button(window, text="Nouvelle grille", command=new_grid) # Bouton Nouvelle grille
+    b_reset = Button(window, text="Recommencer", command=reset) # Bouton Recommencer (recommencer la grille courante)
     b_new.grid(row=0, column=int(0.8*nbColumns), columnspan=2)
     b_reset.grid(row=1, column=int(0.8*nbColumns), columnspan=2)
 

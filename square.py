@@ -4,12 +4,12 @@ from possibleColor import PossibleColor
 
 class Square(Canvas):
     def __init__(self, color, master, t, posi, posj, matParent):
-        self._currentColor = color
-        super().__init__(master, width=t, height=t, background=self._currentColor.name)
-        self._mat = matParent
+        self._currentColor = color # Couleur courante du carré
+        super().__init__(master, width=t, height=t, background=self._currentColor.name) # Appel au constructeur de la classe Canvas (super classe)
+        self._mat = matParent # Matrice parent du carré
         self.bind('<Button-1>', self.onMouse)
-        self._i = posi
-        self._j = posj
+        self._i = posi # Position verticale du carré
+        self._j = posj # Position horizontale du carré
 
     def onMouse(self, event):
         """ Fonction évènementielle appelée lors d'un clic sur le carré. Joue un coup en utilisant la couleur du carré courant """
