@@ -1,5 +1,6 @@
 from enum import Enum
 
+
 class PossibleColor(Enum):
     Blue = 0
     Red = 1

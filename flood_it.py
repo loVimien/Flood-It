@@ -26,12 +26,12 @@ def main():
 if __name__ == "__main__":
     try:
         import networkx
-    except Exception:
+    except ImportError:
         print("The library networkx isn't installed. Please install it with pip install networkx")
         quit()
     try:
         from tkinter import *
-    except Exception:
+    except ImportError:
         print("The library tkinter isn't installed. Please install it with pip install tkinter")
     from Gmatrix import GMatrix
     main()

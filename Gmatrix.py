@@ -8,6 +8,8 @@ import networkx as nx
 
 class GMatrix:
     def __init__(self, master, nbLines, nbCols, vertoffset, horizoffset, sqDim):
+        if nbLines <=0 or nbCols <= 0:
+            raise ValueError("Le nombre de lignes et de colones doit être supérieur à 0 !")
         self._lines = nbLines
         self._colums = nbCols
         self._window = master
@@ -27,7 +29,7 @@ class GMatrix:
         self._textFont = font.Font(family='Helvetica', size=10, weight='bold')
         self._textMoves = StringVar()
         self._labelMoves = Label(self._window, textvariable=self._textMoves, font=self._textFont)
-        self._textWin = Label(self._window, text="Vous avez gagné", font=self._textFont)
+        self._textWin = Label(self._window, text="Vous avez gagné !", font=self._textFont)
         self._textPredic = None
         self._save = (self._mat.copy(), self._currSet.copy())
 
@@ -39,6 +41,7 @@ class GMatrix:
 
 
     def solveFloodIt(self):
+        """Lance plusieurs algorithmes de résolution du Flood It et affiche le nombre de coups pour le résoudre"""
 
         print("Génération et résolution de la grille ...\n" + 32 * "- ")
 
@@ -87,6 +90,7 @@ class GMatrix:
         self._textMoves.set("Coups joués : 0\n" + self._textPredic)
 
     def updateSet(self, colorToUpdate):
+        """Met à jour la liste des carrés de même couleur remplis par l'utilisateur"""
         i = 0
         while(i < len(self._currSet)):
             currI = self._currSet[i][1]
@@ -106,11 +110,10 @@ class GMatrix:
 
         for i in range(len(self._currSet)):
             self._currSet[i][0] = colorToUpdate
-
-
         # On applique le changement de couleur aux carrés présents dans la liste currSet
 
     def play(self, colorToUpdate):
+        """Joue un coup et met à jour les couleurs"""
         self.updateSet(colorToUpdate)
         self._moves += 1
         self._textMoves.set("Coups joués : {}\n".format(self._moves) + self._textPredic)
@@ -121,25 +124,25 @@ class GMatrix:
 
 
     def updateGraphicMatrix(self):
+        """Met à jour l'affichage graphique du Flood It"""
         for k in range(len(self._currSet)):
             currI = self._currSet[k][1]
             currJ = self._currSet[k][2]
             self._mat[currI][currJ].color = self._currSet[k][0]
 
     def isFill(self):
-        if len(self._currSet) == len(self._mat) * len(self._mat[0]):
+        """Renvoie vrai si la grille est remplie d'une seule couleur et faux sinon"""
         # Si le nombre de carré de la nouvelle couleur est égal au nombre total alors toute la grille est remplie
-        # Le Flood It est rempli d'une seule couleur
-            return True
-        else:
-            return False
+        return len(self._currSet) == len(self._mat) * len(self._mat[0])
 
     def win(self):
+        """Cache les carrés et affiche un texte de victoire"""
         self.hideSquares()
         self._textWin.grid(row=self._mat[0][0].vert, column=0, columnspan=10)
         # print(len(self._currSet))
 
     def hideSquares(self):
+        """Cache les carrés"""
         for i in self._mat:
             for j in i:
                 j.grid_forget()

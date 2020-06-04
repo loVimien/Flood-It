@@ -2,13 +2,16 @@ from possibleColor import PossibleColor
 import networkx as nx
 from random import choice
 
+
 class Solve:
     @staticmethod
     def saveMatrix(matrix):
+        """Fais une sauvegarde de la matrice"""
         return matrix.mat.copy(), matrix.currSet.copy()
 
     @staticmethod
     def restoreMatrix(matrix, copy):
+        """Restaure une matrice sauvegardée"""
         matrix.mat = copy[0].copy()
         matrix.currSet = copy[1].copy()
 
@@ -66,55 +69,57 @@ class Solve:
         save = Solve.saveMatrix(matrix)
         moves = 0
         while not matrix.isFill():
-                matrix.updateSet(funColor(matrix))
-                moves += 1
+            matrix.updateSet(funColor(matrix))
+            moves += 1
         # On remet tout dans la situation initiale pour pouvoir utiliser d'autres algorithmes de résolution
         Solve.restoreMatrix(matrix, save)
         return moves
+
     def model_graph(matrix):
+        """Retourne une modélisation du Flood It sous forme de graphe"""
         vertices = {}
         mat_rep = []
         for i in range(len(matrix.mat)):
             line = []
             for j in range(len(matrix.mat[i])):
-                line.append([matrix[(i,j)], None])
+                line.append([matrix[(i, j)], None])
             mat_rep.append(line)
         current_new_vertex = 0
         for i in range(len(mat_rep)):
             for j in range(len(mat_rep[i])):
                 current_vertex = ""
                 if mat_rep[i][j][1] == None:
-                    vertices["v{}".format(current_new_vertex)] = [(i,j)]
+                    vertices["v{}".format(current_new_vertex)] = [(i, j)]
                     mat_rep[i][j][1] = "v{}".format(current_new_vertex)
                     current_vertex = "v{}".format(current_new_vertex)
                     current_new_vertex += 1
                 else:
                     current_vertex = mat_rep[i][j][1]
-                if i-1 >= 0 and mat_rep[i][j][0] == mat_rep[i-1][j][0] and mat_rep[i-1][j][1] == None:
-                    vertices[current_vertex].append((i-1,j))
-                    mat_rep[i-1][j][1] = current_vertex
-                if i+1 < len(mat_rep) and mat_rep[i][j][0] == mat_rep[i+1][j][0] and mat_rep[i+1][j][1] == None:
-                    vertices[current_vertex].append((i+1,j))
-                    mat_rep[i+1][j][1] = current_vertex
-                if j-1 >= 0 and mat_rep[i][j][0] == mat_rep[i][j-1][0] and mat_rep[i][j-1][1] == None:
-                    vertices[current_vertex].append((i,j-1))
-                    mat_rep[i][j-1][1] = current_vertex
-                if j+1 < len(mat_rep[i]) and mat_rep[i][j][0] == mat_rep[i][j+1][0] and mat_rep[i][j+1][1] == None:
-                    vertices[current_vertex].append((i,j+1))
-                    mat_rep[i][j+1][1] = current_vertex
+                if i - 1 >= 0 and mat_rep[i][j][0] == mat_rep[i - 1][j][0] and mat_rep[i - 1][j][1] == None:
+                    vertices[current_vertex].append((i - 1, j))
+                    mat_rep[i - 1][j][1] = current_vertex
+                if i + 1 < len(mat_rep) and mat_rep[i][j][0] == mat_rep[i + 1][j][0] and mat_rep[i + 1][j][1] == None:
+                    vertices[current_vertex].append((i + 1, j))
+                    mat_rep[i + 1][j][1] = current_vertex
+                if j - 1 >= 0 and mat_rep[i][j][0] == mat_rep[i][j - 1][0] and mat_rep[i][j - 1][1] == None:
+                    vertices[current_vertex].append((i, j - 1))
+                    mat_rep[i][j - 1][1] = current_vertex
+                if j + 1 < len(mat_rep[i]) and mat_rep[i][j][0] == mat_rep[i][j + 1][0] and mat_rep[i][j + 1][1] == None:
+                    vertices[current_vertex].append((i, j + 1))
+                    mat_rep[i][j + 1][1] = current_vertex
         graph = nx.Graph()
         for i in vertices.keys():
             graph.add_node(i)
         for i in range(len(mat_rep)):
             for j in range(len(mat_rep[i])):
-                if i-1 >= 0 and mat_rep[i][j][1] != mat_rep[i-1][j][1] and (mat_rep[i][j][1], mat_rep[i-1][j][1]) not in graph.edges() and (mat_rep[i-1][j][1], mat_rep[i][j][1]) not in graph.edges():
-                    graph.add_edge(mat_rep[i][j][0], mat_rep[i-1][j][1])
-                if i+1 < len(mat_rep) and mat_rep[i][j][1] != mat_rep[i+1][j][1] and (mat_rep[i][j][1], mat_rep[i+1][j][1]) not in graph.edges() and (mat_rep[i+1][j][1], mat_rep[i][j][1]) not in graph.edges():
-                    graph.add_edge(mat_rep[i][j][1], mat_rep[i+1][j][1])
-                if j-1 >= 0 and mat_rep[i][j][1] != mat_rep[i][j-1][1] and (mat_rep[i][j][1], mat_rep[i][j-1][1]) not in graph.edges() and (mat_rep[i][j-1][1], mat_rep[i][j][1]) not in graph.edges():
-                    graph.add_edge(mat_rep[i][j][1], mat_rep[i][j-1][1])
-                if j+1 < len(mat_rep[i]) and mat_rep[i][j][1] != mat_rep[i][j+1][1] and (mat_rep[i][j][1], mat_rep[i][j+1][1]) not in graph.edges() and (mat_rep[i][j+1][1], mat_rep[i][j][1]) not in graph.edges():
-                    graph.add_edge(mat_rep[i][j][1], mat_rep[i][j+1][1])
+                if i - 1 >= 0 and mat_rep[i][j][1] != mat_rep[i - 1][j][1] and (mat_rep[i][j][1], mat_rep[i - 1][j][1]) not in graph.edges() and (mat_rep[i - 1][j][1], mat_rep[i][j][1]) not in graph.edges():
+                    graph.add_edge(mat_rep[i][j][0], mat_rep[i - 1][j][1])
+                if i + 1 < len(mat_rep) and mat_rep[i][j][1] != mat_rep[i + 1][j][1] and (mat_rep[i][j][1], mat_rep[i + 1][j][1]) not in graph.edges() and (mat_rep[i + 1][j][1], mat_rep[i][j][1]) not in graph.edges():
+                    graph.add_edge(mat_rep[i][j][1], mat_rep[i + 1][j][1])
+                if j - 1 >= 0 and mat_rep[i][j][1] != mat_rep[i][j - 1][1] and (mat_rep[i][j][1], mat_rep[i][j - 1][1]) not in graph.edges() and (mat_rep[i][j - 1][1], mat_rep[i][j][1]) not in graph.edges():
+                    graph.add_edge(mat_rep[i][j][1], mat_rep[i][j - 1][1])
+                if j + 1 < len(mat_rep[i]) and mat_rep[i][j][1] != mat_rep[i][j + 1][1] and (mat_rep[i][j][1], mat_rep[i][j + 1][1]) not in graph.edges() and (mat_rep[i][j + 1][1], mat_rep[i][j][1]) not in graph.edges():
+                    graph.add_edge(mat_rep[i][j][1], mat_rep[i][j + 1][1])
         return graph, vertices
 
     def generate_dictionnary_graph(graph):
@@ -124,11 +129,11 @@ class Solve:
             for j in graph.neighbors(i):
                 d_graph[i].append(j)
         return d_graph
-    
+
     def number_of_vertices(graph):
         """Returns the number of vertices of the graph."""
         return len(graph.keys())
-    
+
     def bfs(rgraph, r):
         """Makes the BFS of the graph from vertex r. Returns a tuple
         (parent, d, color)."""
@@ -156,20 +161,23 @@ class Solve:
             f.pop(0)
             color[u] = 'n'
         return (parent, d, color)
-    
+
     def furthest_node(graph):
+        """Renvoie le noeud le plus éloigné"""
         bfs = Solve.bfs(graph, "v0")
         max = 0
         node = "v0"
-        for i,j in bfs[1].items():
+        for i, j in bfs[1].items():
             node = i if j > max else node
             max = j if j > max else max
         return node
-    
+
     def shortest_path_to_furthest_node(graph):
+        """Renvoie le chemin vers le noeud le plus éloigné"""
         return nx.shortest_path(graph, "v0", Solve.furthest_node(graph))
-    
+
     def resolve_with_graph(matrix):
+        """Renvoie le nombre de coups requis pour résoudre le Flood It à l'aide du graphe en rejoignant d'abord la zone la plus éloignée puis en finissant par un algorithme greedy"""
         graph, vertices = Solve.model_graph(matrix)
         path = Solve.shortest_path_to_furthest_node(graph)
         save = Solve.saveMatrix(matrix)
