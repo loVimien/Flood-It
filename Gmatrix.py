@@ -53,16 +53,16 @@ class GMatrix:
         print(f"Durée = {time.time() - begin} secondes.\n")
 
         begin = time.time()
+        nbCoupsGraph = Solve.resolve_with_graph(self)
+        print("Nombre de coups avec la résolution par graphe : {}".format(nbCoupsGraph))
+        print("Durée = {} secondes\n".format(time.time() - begin))
+
+        begin = time.time()
         nbCoupsForce = Solve.solve(self, Solve.forceColor)
         print(f"Nombre de coups avec plusieurs tours de projection : {nbCoupsForce}.")
         print(f"Durée = {time.time() - begin} secondes.\n")
 
-        begin = time.time()
-        nbCoupsGraph = Solve.resolve_with_graph(self)
-        print("Nombre de coups avec la résolution par graphe : {}".format(nbCoupsGraph))
-        print("Durée = {} secondes".format(time.time() - begin))
-
-        self._textPredic = "nombre de coups possible de manière aléatoire : {},\n nombre de coups possibles avec l'algorithme greedy {},\n nombre de coups possibles avec plusieurs tours de projection {}".format(nbCoupsRand, nbCoupsGreed, nbCoupsForce)
+        self._textPredic = "nombre de coups possible de manière aléatoire : {},\n nombre de coups possibles avec l'algorithme greedy {},\n nombre de coups possibles avec la résolution par graphes {},\n nombre de coups possibles avec plusieurs tours de projection {}".format(nbCoupsRand, nbCoupsGreed, nbCoupsGraph, nbCoupsForce)
         self._textMoves.set("Coups joués : 0\n" + self._textPredic)
 
     def display(self, span):
@@ -143,7 +143,7 @@ class GMatrix:
         for i in self._mat:
             for j in i:
                 j.grid_forget()
-    
+
     def destroySquares(self):
         for i in self._mat:
             for j in i:
@@ -154,18 +154,18 @@ class GMatrix:
             self._textWin.destroy()
         self._labelMoves.destroy()
         self.destroySquares()
-    
+
     def _get_mat(self):
         return self._mat
-    
+
     def _set_mat(self, mat):
         self._mat = mat
 
     def _get_set(self):
         return self._currSet
-    
+
     def _set_set(self, s):
         self._currSet = s
-    
+
     mat = property(_get_mat, _set_mat)
     currSet = property(_get_set, _set_set)

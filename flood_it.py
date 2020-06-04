@@ -1,5 +1,3 @@
-import os
-
 def main():
     def new_grid():
         global b
@@ -37,5 +35,3 @@ if __name__ == "__main__":
         print("The library tkinter isn't installed. Please install it with pip install tkinter")
     from Gmatrix import GMatrix
     main()
-    
-    
