@@ -7,13 +7,12 @@ class Solve:
     @staticmethod
     def saveMatrix(matrix):
         """Fais une sauvegarde de la matrice"""
-        return matrix.mat.copy(), matrix.currSet.copy()
+        return matrix.currSet.copy()
 
     @staticmethod
     def restoreMatrix(matrix, copy):
         """Restaure une matrice sauvegardée"""
-        matrix.mat = copy[0].copy()
-        matrix.currSet = copy[1].copy()
+        matrix.currSet = copy.copy()
 
     @staticmethod
     def randomColor(matrix=None):
