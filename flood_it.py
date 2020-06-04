@@ -5,6 +5,7 @@ squareDim = 50
 
 def main():
     def new_grid():
+        """ Fonction appelée lors d'un clic sur le bouton Nouvelle grille. Détruit la grille courante et en regénère une nouvelle """
         global mat
         global nbLines
         global nbColumns
@@ -14,6 +15,7 @@ def main():
         mat.display(2)
 
     def reset():
+        """ Fonction appelée lors d'un clic sur le bouton Recommencer. Appelle la fonction resetMatrix pour remettre la grille courante à sont état initial """
         global mat
         mat.resetMatrix()
 
