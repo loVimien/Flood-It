@@ -5,12 +5,12 @@ from random import choice
 
 class Solve:
     @staticmethod
-    def saveMatrix(matrix):
+    def _saveMatrix(matrix):
         """Fais une sauvegarde de la matrice"""
         return matrix.currSet.copy()
 
     @staticmethod
-    def restoreMatrix(matrix, copy):
+    def _restoreMatrix(matrix, copy):
         """Restaure une matrice sauvegardée"""
         matrix.currSet = copy.copy()
 
@@ -24,15 +24,14 @@ class Solve:
         """Renvoie la couleur qui maximise le remplissage"""
         max = 0
         maxColor = choice(list(PossibleColor))
-        # Sauvegarde de la matrice
-        save = Solve.saveMatrix(matrix)
+        # Sauvegarde du set
+        save = Solve._saveMatrix(matrix)
         for color in list(PossibleColor):
             matrix.updateSet(color)
             if len(matrix.currSet) > max:
                 max = len(matrix.currSet)
                 maxColor = color
-            Solve.restoreMatrix(matrix, save)
-        #print(maxColor, "greedy")
+            Solve._restoreMatrix(matrix, save)
         return maxColor
 
     @staticmethod
@@ -40,8 +39,8 @@ class Solve:
         """Renvoie la couleur qui maximise le remplissage sur 4 tours"""
         max = 0
         maxColor = choice(list(PossibleColor))
-        # Sauvegarde de la matrice
-        save = Solve.saveMatrix(matrix)
+        # Sauvegarde du set
+        save = Solve._saveMatrix(matrix)
         for color1 in list(PossibleColor):
             for color2 in list(PossibleColor):
                 for color3 in list(PossibleColor):
@@ -54,36 +53,37 @@ class Solve:
                             max = len(matrix.currSet)
                             if max == len(matrix.mat) * len(matrix.mat[0]):
                                 # Au dernier tour il ne faut regarder qu'avec 1 tour d'avance
-                                Solve.restoreMatrix(matrix, save)
+                                Solve._restoreMatrix(matrix, save)
                                 return Solve.greedyColor(matrix)
                             maxColor = color1
-                        Solve.restoreMatrix(matrix, save)
-        #print(f"maxColor : {maxColor} | max : {max} | isFill : {self._mat.isFill()} | len(currSet) : {len(self._mat._currSet)} | nbCarrés : {len(self._mat._mat) * len(self._mat._mat[0])}")
-        #print(maxColor, "force")
+                        Solve._restoreMatrix(matrix, save)
         return maxColor
 
     @staticmethod
     def solve(matrix, funColor):
         """Retourne le nombre de coups nécessaires pour remplir le flood-it étant donné une fonction funColor de choix de la couleur."""
-        save = Solve.saveMatrix(matrix)
+        save = Solve._saveMatrix(matrix)
         moves = 0
         while not matrix.isFill():
             matrix.updateSet(funColor(matrix))
             moves += 1
         # On remet tout dans la situation initiale pour pouvoir utiliser d'autres algorithmes de résolution
-        Solve.restoreMatrix(matrix, save)
+        Solve._restoreMatrix(matrix, save)
         return moves
 
-    def model_graph(matrix):
+    @staticmethod
+    def _model_graph(matrix):
         """Retourne une modélisation du Flood It sous forme de graphe"""
         vertices = {}
         mat_rep = []
+        # Génération d'une matrice contenant la couleur de chaque case ainsi que le sommet du graphe auquels elles sont associées (None par défaut)
         for i in range(len(matrix.mat)):
             line = []
             for j in range(len(matrix.mat[i])):
                 line.append([matrix[(i, j)], None])
             mat_rep.append(line)
         current_new_vertex = 0
+        # Génération des sommets (dictionnaire contenant comme clés chaque sommet et comme valeurs les listes de chaque case de la matrice qui y sont associé)
         for i in range(len(mat_rep)):
             for j in range(len(mat_rep[i])):
                 current_vertex = ""
@@ -109,6 +109,7 @@ class Solve:
         graph = nx.Graph()
         for i in vertices.keys():
             graph.add_node(i)
+        # Génération des arrêtes (ajout de chaque arrête dans le graphe networkx)
         for i in range(len(mat_rep)):
             for j in range(len(mat_rep[i])):
                 if i - 1 >= 0 and mat_rep[i][j][1] != mat_rep[i - 1][j][1] and (mat_rep[i][j][1], mat_rep[i - 1][j][1]) not in graph.edges() and (mat_rep[i - 1][j][1], mat_rep[i][j][1]) not in graph.edges():
@@ -121,7 +122,10 @@ class Solve:
                     graph.add_edge(mat_rep[i][j][1], mat_rep[i][j + 1][1])
         return graph, vertices
 
-    def generate_dictionnary_graph(graph):
+    @staticmethod
+    def _generate_dictionnary_graph(graph):
+        """ Génère un graphe sous forme de dictionnaire dont les clés sont les différents sommets du graphes 
+        et les valeurs sont les listes de tous les voisins à partir d'un graphe networkx """
         d_graph = {}
         for i in graph.nodes():
             d_graph[i] = []
@@ -129,14 +133,16 @@ class Solve:
                 d_graph[i].append(j)
         return d_graph
 
-    def number_of_vertices(graph):
+    @staticmethod
+    def _number_of_vertices(graph):
         """Returns the number of vertices of the graph."""
         return len(graph.keys())
 
-    def bfs(rgraph, r):
-        """Makes the BFS of the graph from vertex r. Returns a tuple
+    @staticmethod
+    def _bfs(rgraph, r):
+        """Génère le BFS d'un graphe à partir du sommet r. Retourne le tuple
         (parent, d, color)."""
-        graph = Solve.generate_dictionnary_graph(rgraph)
+        graph = Solve._generate_dictionnary_graph(rgraph)
         parent = {}
         d = {}
         color = {}
@@ -144,7 +150,7 @@ class Solve:
             if i != r:
                 color[i] = 'b'
                 parent[i] = None
-                d[i] = Solve.number_of_vertices(graph) + 1
+                d[i] = Solve._number_of_vertices(graph) + 1
         f = []
         f.append(r)
         color[r] = 'g'
@@ -161,9 +167,10 @@ class Solve:
             color[u] = 'n'
         return (parent, d, color)
 
-    def furthest_node(graph):
-        """Renvoie le noeud le plus éloigné"""
-        bfs = Solve.bfs(graph, "v0")
+    @staticmethod
+    def _furthest_node(graph):
+        """Renvoie le noeud le plus éloigné (noeud dont la distance BFS par rapport au noeud v0 (qui contient la case supérieurs gauche de la matrice)"""
+        bfs = Solve._bfs(graph, "v0")
         max = 0
         node = "v0"
         for i, j in bfs[1].items():
@@ -171,15 +178,17 @@ class Solve:
             max = j if j > max else max
         return node
 
-    def shortest_path_to_furthest_node(graph):
+    @staticmethod
+    def _shortest_path_to_furthest_node(graph):
         """Renvoie le chemin vers le noeud le plus éloigné"""
-        return nx.shortest_path(graph, "v0", Solve.furthest_node(graph))
+        return nx.shortest_path(graph, "v0", Solve._furthest_node(graph))
 
+    @staticmethod
     def resolve_with_graph(matrix):
         """Renvoie le nombre de coups requis pour résoudre le Flood It à l'aide du graphe en rejoignant d'abord la zone la plus éloignée puis en finissant par un algorithme greedy"""
-        graph, vertices = Solve.model_graph(matrix)
-        path = Solve.shortest_path_to_furthest_node(graph)
-        save = Solve.saveMatrix(matrix)
+        graph, vertices = Solve._model_graph(matrix)
+        path = Solve._shortest_path_to_furthest_node(graph)
+        save = Solve._saveMatrix(matrix)
         moves = 0
         for i in path:
             matrix.updateSet(matrix[vertices[i][0]])
@@ -187,5 +196,5 @@ class Solve:
         while not matrix.isFill():
             matrix.updateSet(Solve.greedyColor(matrix))
             moves += 1
-        Solve.restoreMatrix(matrix, save)
+        Solve._restoreMatrix(matrix, save)
         return moves

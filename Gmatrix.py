@@ -69,6 +69,7 @@ class GMatrix:
         self._textMoves.set("Coups joués : 0\n" + self._textPredic)
 
     def display(self, span):
+        """Affiche tous les éléments graphiques"""
         self._labelMoves.grid(row = 0, column = 0, columnspan=8, rowspan=span)
         for i in self._mat:
             for j in i:
@@ -76,10 +77,14 @@ class GMatrix:
 
 
     def __getitem__(self, coord):
+        """ Pour x, y des entiers et m une matrice, est invoquée avec m[(y,x)]. Renvoie la couleur du carré aux coordonnées x, y"""
         x, y = coord
+        if x < 0 or y < 0 or x >= self._lines or y >= self._colums:
+            raise ValueError("Invalid coordinates") 
         return self._mat[x][y].color
 
     def resetMatrix(self):
+        """ Remet la matrice à son état d'origine """
         self._currSet = self._saveSet.copy()
         self._moves = 0
         self._textWin.grid_forget()
@@ -148,27 +153,30 @@ class GMatrix:
                 j.grid_forget()
 
     def destroySquares(self):
+        """ Détruit les carrés """
         for i in self._mat:
             for j in i:
                 j.destroy()
 
     def destroyAll(self):
+        """ Détruit tous les éléments graphiques """
         if self._textWin != None:
             self._textWin.destroy()
         self._labelMoves.destroy()
         self.destroySquares()
 
     def _get_mat(self):
+        """ Getter de l'attribut _mat """
         return self._mat
 
-    def _set_mat(self, mat):
-        self._mat = mat
-
     def _get_set(self):
+        """ Getter de l'attribut _currSet """
         return self._currSet
 
     def _set_set(self, s):
+        """ Setter de l'attribut _currSet """
         self._currSet = s
 
-    mat = property(_get_mat, _set_mat)
+    # Propriétés associant les différents getters et setters
+    mat = property(_get_mat)
     currSet = property(_get_set, _set_set)
