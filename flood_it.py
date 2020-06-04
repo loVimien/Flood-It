@@ -1,6 +1,7 @@
+mat = None
+
 def main():
     def new_grid():
-        global b
         global mat
         mat.destroyAll()
         mat = GMatrix(window, 10, 10, 2, 0, 50)
@@ -10,6 +11,7 @@ def main():
         global mat
         mat.resetMatrix()
 
+    global mat
     window = Tk()
     window.title("Flood it")
     icon = PhotoImage(file='icon.png')
